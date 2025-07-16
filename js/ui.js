@@ -68,10 +68,17 @@ const ui = {
         
         const botaoFavorito = document.createElement("button");
         botaoFavorito.classList.add("botao-favorito");
-        botaoFavorito.onclick = () => ui.preencherFormulario(pensamento.id);
+        botaoFavorito.onclick = async () => {
+            try {
+                await api.atualizarFavorito(pensamento.id, !pensamento.favorito)
+            } catch (error) {
+                alert("Erro ao atualizar favorito;");
+                throw Error
+            }
+        }
 
         const iconeFavorito = document.createElement("img");
-        iconeFavorito.src = "assets/imagens/icone-favorito";
+        iconeFavorito.src = pensamento.favorito ? "assets/imagens/icone-favorito.png": "assets/imagens/icone-favorito_outline.png"  ;
         iconeFavorito.alt = "Favoritar pensamento";
         botaoFavorito.appendChild(iconeFavorito);
 
@@ -94,7 +101,7 @@ const ui = {
         
         const icones = document.createElement("div");
         icones.classList.add("icones");
-        icones.append(botaoEditar, botaoExcluir);
+        icones.append(botaoFavorito, botaoEditar, botaoExcluir);
         
         pensamentoCaixa.append(pensamentoConteudo, pensamentoAutoria)
         li.append(img, pensamentoConteudo, pensamentoAutoria, icones);

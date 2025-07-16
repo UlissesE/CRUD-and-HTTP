@@ -62,6 +62,16 @@ const api = {
             alert("Erro ao filtrar pensamentos pesquisados")
             throw Error
         }
+    }, 
+    
+    async atualizarFavorito(id, favorito) {
+        try {
+            const response = await URL_BASE.patch(`pensamentos/${id}`, {favorito})
+            return response.data;
+        } catch (error) {
+            alert("Erro ao favoritar pensamento.")
+            throw Error
+        }
     }
 }
 
