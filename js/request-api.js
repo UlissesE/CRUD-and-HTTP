@@ -1,21 +1,36 @@
 const URL_BASE = axios.create({
     baseURL: 'http://localhost:3000'
 })
+const converterStringParaData = (dataString) => {
+  const [ano, mes, dia] = dataString.split("-")
+  return new Date(Date.UTC(ano, mes-1, dia))
+}
 
 const api = {
     async requestAPI() {
         try {
             const response = await URL_BASE.get(`pensamentos`);
-            return await response.data;
+            const pensamentos = await response.data;
+
+            return pensamentos.map(pensamento => {
+                return {
+                    ...pensamento,
+                    data: new Date(pensamento.data)
+                }
+            })
         } catch {
-            alert("Erro ao buscar pensamentos");
+            alert("Erro ao buscar pensamentos na API");
             throw Error 
         }
     }, 
     async postAPI(pensamento) {
         try {
-            const response = await URL_BASE.post(`pensamentos`, pensamento)
-            return await response.axios;
+            const data = converterStringParaData(pensamento.data);
+            const response = await URL_BASE.post(`pensamentos`, {
+                ...pensamento,
+                data: data.toISOString
+            })
+            return await response.data;
         } catch {
             alert("Erro ao postar pensamento")
             throw Error 
@@ -24,7 +39,12 @@ const api = {
     async buscarPensamentoPorId(id) {
         try {
             const response = await URL_BASE.get(`pensamentos/${id}`);
-            return await response.data;
+            const pensamento = await response.data;
+
+            return {
+                ...pensamento,
+                data: new Date(pensamento.data)
+            }
         } catch {
             alert("Erro ao buscar pensamento por ID");
             throw Error 
@@ -32,7 +52,11 @@ const api = {
     },
     async putAPI(pensamento) {
         try {
-            const response = await URL_BASE.put(`pensamentos/${pensamento.id}`, pensamento);
+            const data = converterStringParaData(pensamento.data)
+            const response = await URL_BASE.put(`pensamentos/${pensamento.id}`, {
+                ...pensamento,
+                data
+            });
             return await response.data;
         } catch {
             alert("Erro ao editar pensamento")

@@ -8,6 +8,8 @@ const ui = {
         document.getElementById("pensamento-id").value = pensamento.id;
         document.getElementById("pensamento-conteudo").value = pensamento.conteudo;
         document.getElementById("pensamento-autoria").value = pensamento.autoria;
+        document.getElementById("form-container").scrollIntoView();
+        document.getElementById("pensamento-data").value = pensamento.data.toISOString().split("T")[0];
     },
 
     async renderAPI(pensamentosFiltrados = null) {
@@ -57,6 +59,18 @@ const ui = {
         pensamentoAutoria.classList.add("pensamento-autoria");
         pensamentoAutoria.textContent = pensamento.autoria;
 
+        let options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
+        }
+        const pensamentoData = document.createElement("div");
+        const dataFormatada = pensamento.data.toLocaleDateString("pt-br", options)
+        pensamentoData.textContent = dataFormatada;
+        pensamentoData.classList.add("pensamento-data");
+
         const botaoEditar = document.createElement("button");
         botaoEditar.classList.add("botao-editar");
         botaoEditar.onclick = () => ui.preencherFormulario(pensamento.id);
@@ -103,8 +117,8 @@ const ui = {
         icones.classList.add("icones");
         icones.append(botaoFavorito, botaoEditar, botaoExcluir);
         
-        pensamentoCaixa.append(pensamentoConteudo, pensamentoAutoria)
-        li.append(img, pensamentoConteudo, pensamentoAutoria, icones);
+        pensamentoCaixa.append(pensamentoConteudo, pensamentoAutoria, pensamentoData)
+        li.append(img, pensamentoCaixa, icones);
         listaDePensamentos.append(li);
     }
 }
