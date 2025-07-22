@@ -28,7 +28,7 @@ const api = {
             const data = converterStringParaData(pensamento.data);
             const response = await URL_BASE.post(`pensamentos`, {
                 ...pensamento,
-                data: data.toISOString
+                data: data.toISOString()
             })
             return await response.data;
         } catch {
